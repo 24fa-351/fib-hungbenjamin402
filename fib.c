@@ -3,32 +3,27 @@
 
 // Recursive Fibonacci function
 int fib_recursive(int n) {
-    // Base cases
-    if (n <= 0) return 0;  // Handle non-positive inputs
-    if (n == 1 || n == 2) return 1;  // F(1) = F(2) = 1
-
-    // Recursive case: F(n) = F(n-1) + F(n-2)
+    if (n == 1) return 0; // Fibonacci #1 is 0
+    if (n == 2) return 1; // Fibonacci #2 is 1
     return fib_recursive(n - 1) + fib_recursive(n - 2);
 }
 
 // Iterative Fibonacci function
 int fib_iterative(int n) {
-    // Handle edge cases
-    if (n <= 0) return 0;  // Handle non-positive inputs
-    if (n == 1 || n == 2) return 1;  // F(1) = F(2) = 1
+    if (n == 1) return 0; // Fibonacci #1 is 0
+    if (n == 2) return 1; // Fibonacci #2 is 1
 
-    int fib_prev = 1;       // F(n-1)
-    int fib_prev_prev = 1;  // F(n-2)
-    int fib_current = 2;    // F(n)
+    int fibFirstTerm = 0;
+    int fibSecTerm = 1;
+    int fibNthTerm = 0;
 
-    // Calculate Fibonacci numbers iteratively
-    for (int i = 3; i < n; i++) {
-        fib_prev_prev = fib_prev;
-        fib_prev = fib_current;
-        fib_current = fib_prev + fib_prev_prev;
+    for (int i = 3; i <= n; i++) {
+        fibNthTerm = fibFirstTerm + fibSecTerm;
+        fibFirstTerm = fibSecTerm;
+        fibSecTerm = fibNthTerm;
     }
 
-    return fib_current;
+    return fibSecTerm;
 }
 
 int main(int argc, char *argv[]) {
@@ -56,8 +51,6 @@ int main(int argc, char *argv[]) {
     // Sum the user's integer and the file integer
     int N = userInteger + fileInteger;
 
-    printf("Calculating the Fibonacci number for N = %d...\n", N);
-
     // Calculate Fibonacci using specified method
     int result;
     if (method == 'i') {
@@ -70,7 +63,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Output the result with the required format: Fibonacci #N is result
-    printf("Fibonacci #%d is %d\n", N, result);
+    printf("%d", result);
 
     return 0;
 }
