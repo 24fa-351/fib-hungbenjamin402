@@ -1,48 +1,76 @@
 #include <stdio.h>
+#include <stdlib.h>  // For atoi()
 
-int main() {
-    FILE *fpointer;
-    int fibTerms = 0;
-    int fibSeq[1000];
+// Recursive Fibonacci function
+int fib_recursive(int n) {
+    // Base cases
+    if (n <= 0) return 0;  // Handle non-positive inputs
+    if (n == 1 || n == 2) return 1;  // F(1) = F(2) = 1
 
-    int fibFirstTerm = 0;
-    int fibSecTerm = 1;
+    // Recursive case: F(n) = F(n-1) + F(n-2)
+    return fib_recursive(n - 1) + fib_recursive(n - 2);
+}
 
-    // Open the file
-    fpointer = fopen("/Users/benj/Documents/Coding/fib-hungbenjamin402/fibTerms.txt","r");
+// Iterative Fibonacci function
+int fib_iterative(int n) {
+    // Handle edge cases
+    if (n <= 0) return 0;  // Handle non-positive inputs
+    if (n == 1 || n == 2) return 1;  // F(1) = F(2) = 1
 
-    // Verify the opening file status
+    int fib_prev = 1;       // F(n-1)
+    int fib_prev_prev = 1;  // F(n-2)
+    int fib_current = 2;    // F(n)
+
+    // Calculate Fibonacci numbers iteratively
+    for (int i = 3; i < n; i++) {
+        fib_prev_prev = fib_prev;
+        fib_prev = fib_current;
+        fib_current = fib_prev + fib_prev_prev;
+    }
+
+    return fib_current;
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 4) {
+        printf("Usage: %s <integer> <r/i> <filename>\n", argv[0]);
+        return 1;
+    }
+
+    // Parse command-line arguments
+    int userInteger = atoi(argv[1]);
+    char method = argv[2][0];
+    char *filename = argv[3];
+
+    // Read integer from the file
+    FILE *fpointer = fopen(filename, "r");
     if (fpointer == NULL) {
         printf("Error opening file\n");
         return -1;
     }
 
-    // Read  fibonacci terms from file and store it in fibTerms
-    fscanf(fpointer, "%d", &fibTerms);
-
-    // Close the file
+    int fileInteger = 0;
+    fscanf(fpointer, "%d", &fileInteger);
     fclose(fpointer);
 
-    // Initiate first and second term in Fib Array
-    fibSeq[0] = fibFirstTerm;
-    fibSeq[1] = fibSecTerm;
+    // Sum the user's integer and the file integer
+    int N = userInteger + fileInteger;
 
-    printf("Fibonacci Terms: %d\n", fibTerms);
+    printf("Calculating the Fibonacci number for N = %d...\n", N);
 
-    printf("Fib 1: %d\n", fibSeq[0]);
-    printf("Fib 2: %d\n", fibSeq[1]);
-
-    // Fibonacci Algo
-
-    // Calculate the Fibonacci sequence
-    for (int i = 2; i < fibTerms; i++) {
-        fibSeq[i] = fibSeq[i-1] + fibSeq[i-2];
+    // Calculate Fibonacci using specified method
+    int result;
+    if (method == 'i') {
+        result = fib_iterative(N);
+    } else if (method == 'r') {
+        result = fib_recursive(N);
+    } else {
+        printf("Invalid method. Use 'r' for recursive or 'i' for iterative.\n");
+        return 1;
     }
 
-    // Print the Fibonacci sequence
-    for (int i = 0; i < fibTerms; i++) {
-        printf("%d ", fibSeq[i]);
-    }
+    // Output the result with the required format: Fibonacci #N is result
+    printf("Fibonacci #%d is %d\n", N, result);
 
     return 0;
 }
